@@ -1,175 +1,196 @@
 # OpenResend
 
-**OpenResend** is a modern, lightweight, multi-account, self-hosted webmail client built specifically for [Resend](https://resend.com) transactional and inbound email APIs.
+**OpenResend** is a lightweight, privacy-focused, multi-account webmail client built specifically for **local development and local mail management** with [Resend](https://resend.com) APIs.
 
-Designed with an AppSec-first posture, OpenResend allows developers, agencies, and small teams to manage incoming and outgoing email across multiple domains with full privacy, zero credential leakage, and robust cryptographic isolation.
-
----
-
-## Key Features
-
-- **Multi-Account & Multi-Domain Isolation**: Connect separate Resend API keys across domains. Cryptographically isolated tenants ensure no cross-account data leakage.
-- **AES-256-GCM Encryption**: All Resend API keys are encrypted at rest with authenticated AES-256-GCM (`iv:authTag:ciphertext`). Zero plaintext keys are ever saved or returned to the frontend.
-- **Deterministic RFC 5322 Email Threading**: Organizes incoming and outgoing messages into unified conversational threads using `Message-ID`, `In-Reply-To`, `References`, and normalized subject headers (with a 7-day fallback window).
-- **Sandboxed Security Viewer & Tracking Blocker**: Renders email HTML inside a hardened, isolated sandbox (`sandbox="allow-popups allow-popups-to-escape-sandbox"`). Remote images and 1x1 tracking pixels are blocked by default to protect recipient IP addresses.
-- **Inbound Webhook Verification**: Built-in verification for Resend / Svix signatures (`svix-signature`, `svix-timestamp`, `svix-id`) with 5-minute replay-attack protection and HMAC-SHA256 fallback.
-- **Internationalization (i18n)**: Launch localization support for **English (`en`)**, **Spanish (`es`)**, **Hindi (`hi`)**, **Chinese (`zh`)**, **German (`de`)**, and **French (`fr`)**.
-- **Dual Database Support**: Run effortlessly with local SQLite for lightweight single-node instances or production PostgreSQL for scalable container deployments.
+> **Local Development Focus**: This project is developed specifically for your **local environment**. It gives you a fast, secure local webmail interface where you can connect multiple Resend domains, inspect inbound and outbound email threads, test email delivery, and directly compose or reply to emails with full RFC 5322 thread context.
 
 ---
 
-## Environment Variables Checklist
+## What You Can Do in OpenResend
 
-Copy `.env.example` to `.env` and configure the following variables:
-
-| Variable | Required | Description | Example |
-| :--- | :--- | :--- | :--- |
-| `DATABASE_URL` | **Yes** | Connection string for SQLite or PostgreSQL | `postgresql://user:pass@localhost:5432/openresend?schema=public` or `file:./dev.db` |
-| `ENCRYPTION_KEY` | **Yes** | 32-byte secret key (or 64-char hex string) used for AES-256-GCM API key encryption | `openssl rand -hex 32` |
-| `JWT_SECRET` | **Yes** | Cryptographic secret used for signing session tokens | `openssl rand -base64 32` |
-| `NEXT_PUBLIC_APP_URL` | **Yes** | Public canonical URL of your instance for webhook dispatch | `https://mail.example.com` |
+- **Manage Resend Accounts Locally**: Connect one or multiple Resend domains and API keys. All keys are encrypted at rest using AES-256-GCM.
+- **Read & Organize Conversations**: Automatic RFC 5322 threading groups messages into clean conversation timelines using `Message-ID`, `In-Reply-To`, and subject normalization.
+- **Reply Directly to Emails**: Click "Reply" or "Reply All" to send context-aware replies through your Resend domain with automatic reference header linking.
+- **Compose New Outbound Emails**: Send rich-text or plain-text messages with file attachments directly through your verified Resend domains.
+- **Safe HTML Previews**: Embedded sandboxed viewer prevents scripts from executing and blocks remote tracking pixels to protect your local environment and IP address.
+- **Zero-Setup Database**: Uses local SQLite by default (`dev.db`), requiring no external database servers or services.
 
 ---
 
-## Quickstart with Docker Compose
+## Step-by-Step: How to Run Locally
 
-OpenResend includes a multi-stage `Dockerfile` and production `docker-compose.yml` linking the Next.js standalone runner with PostgreSQL 16.
+Follow these clear steps to run OpenResend on your local machine in under 2 minutes:
 
-### 1. Clone & Configure
+### Prerequisites
+- **Node.js**: version `20.x` or later (verify with `node -v`)
+- **npm**: version `9.x` or later (verify with `npm -v`)
+
+---
+
+### Step 1: Open Terminal & Navigate to App Directory
 ```bash
-git clone https://github.com/your-org/resend-webmail-client.git
-cd resend-webmail-client/open-resend-client
+cd open-resend-client
+```
+
+---
+
+### Step 2: Configure Local Environment (`.env`)
+Copy the provided `.env.example` file to `.env`:
+
+```bash
+# On Linux/macOS
 cp .env.example .env
+
+# On Windows (PowerShell)
+Copy-Item .env.example .env
 ```
 
-Generate secure secrets for `.env`:
-```bash
-# Generate ENCRYPTION_KEY
-openssl rand -hex 32
+Open `.env` in your code editor. For local running with SQLite, the defaults work out of the box:
+```env
+# Local SQLite database (creates dev.db automatically)
+DATABASE_URL="file:./dev.db"
 
-# Generate JWT_SECRET
-openssl rand -base64 32
+# 32-byte secret key for AES-256-GCM API key encryption (generate with: openssl rand -hex 32)
+ENCRYPTION_KEY="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+
+# JWT session signing secret (generate with: openssl rand -base64 32)
+JWT_SECRET="local-dev-jwt-secret-key-change-this-for-production"
+
+# Local app URL
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
-### 2. Launch Services
-```bash
-docker compose up -d --build
-```
-
-### 3. Initialize Database Schema
-```bash
-docker compose exec app npx prisma db push
-```
-
-Access the web interface at `http://localhost:3000` and complete the initial administrator registration at `/setup`.
+> **Tip**: You can generate secure local keys using OpenSSL or Node:
+> ```bash
+> node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+> ```
 
 ---
 
-## Local Development
+### Step 3: Install Dependencies
+```bash
+npm install
+```
 
-Ensure you have **Node.js 20+** and **npm** installed:
+---
+
+### Step 4: Initialize Local SQLite Database
+Run Prisma to create your local database schema and tables:
 
 ```bash
-# Install dependencies
-npm install
-
-# Push local SQLite schema
 npx prisma db push
+```
 
-# Run test suites (40 tests across 11 test suites)
+*(This creates `prisma/dev.db` with all tables for users, accounts, threads, messages, and attachments).*
+
+---
+
+### Step 5: (Optional) Run Automated Tests
+Verify that all 40 test suites pass cleanly on your machine:
+
+```bash
 npm test
+```
 
-# Start development server
+---
+
+### Step 6: Start Local Development Server
+```bash
 npm run dev
 ```
 
----
-
-## Reverse-Proxy Guidelines (Production)
-
-When deploying behind a reverse-proxy (Nginx or Caddy), ensure HTTP headers and request bodies for incoming Resend webhooks are passed unmodified to preserve cryptographic Svix signatures.
-
-### Nginx Configuration
-
-```nginx
-server {
-    listen 80;
-    server_name mail.example.com;
-    return 301 https://$host$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    server_name mail.example.com;
-
-    ssl_certificate /etc/letsencrypt/live/mail.example.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/mail.example.com/privkey.pem;
-
-    client_max_body_size 25M; # Support large inbound email attachments
-
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-
-        # Standard proxy headers
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-
-        # Inbound Webhook Signature Preservation
-        proxy_set_header svix-id $http_svix_id;
-        proxy_set_header svix-timestamp $http_svix_timestamp;
-        proxy_set_header svix-signature $http_svix_signature;
-        proxy_set_header x-webhook-secret $http_x_webhook_secret;
-
-        # Disable buffering for real-time dispatch
-        proxy_buffering off;
-    }
-}
-```
-
-### Caddy Configuration
-
-```caddy
-mail.example.com {
-    request_body {
-        max_size 25MB
-    }
-
-    reverse_proxy localhost:3000 {
-        header_up Host {host}
-        header_up X-Real-IP {remote_host}
-        header_up X-Forwarded-Proto {scheme}
-    }
-}
-```
+Open your browser and navigate to:
+👉 **[http://localhost:3000](http://localhost:3000)**
 
 ---
 
-## Resend Inbound Routing Setup
+## How to Manage & Reply to Resend Emails
 
-1. Log into your [Resend Dashboard](https://resend.com/emails).
-2. Navigate to **Webhooks** -> **Add Webhook**.
-3. Set the endpoint URL to:
+### 1. Initial Admin Account Setup
+When running for the first time, navigate to:
+- **`http://localhost:3000/setup`**
+- Create your local administrator account (Email + Master Password).
+- Once created, sign in at `/login`.
+
+---
+
+### 2. Connect Your Resend Account
+1. In the sidebar, click **Account Settings** (or navigate to `http://localhost:3000/settings`).
+2. Click **Add Account**.
+3. Fill in:
+   - **Account Display Label**: e.g., `Acme Production` or `Personal Domain`.
+   - **Resend API Key**: Your `re_...` key from [Resend API Keys](https://resend.com/api-keys).
+   - **Default Sender Email**: An email matching your verified Resend domain (e.g., `inbox@yourdomain.com`).
+   - **Default Sender Name**: Your name or team name (e.g., `Alex from Acme`).
+   - **Webhook Secret**: Paste your Resend webhook secret (`whsec_...`) or leave empty for local development.
+4. Click **Save Account**. Your API key is encrypted with AES-256-GCM before saving to `dev.db`.
+
+---
+
+### 3. Receiving Inbound Emails Locally
+To receive emails from Resend on your local development machine:
+
+1. Copy your unique **Inbound Webhook Endpoint** from the Account Settings page:
    ```
-   https://mail.example.com/api/webhooks/resend/<YOUR_ACCOUNT_WEBHOOK_TOKEN>
+   http://localhost:3000/api/webhooks/resend/<YOUR_UNIQUE_WEBHOOK_TOKEN>
    ```
-   *(Find your unique Webhook Token in OpenResend -> **Account Settings**).*
-4. Under events, select `email.received` (and optionally `email.delivered`, `email.bounced`).
-5. Copy the **Signing Secret** (starting with `whsec_`) and paste it into OpenResend Account Settings to enable Svix cryptographic verification.
+2. For testing live emails received by Resend, expose your local port 3000 using a secure tunnel like [Cloudflare Tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) or [Ngrok](https://ngrok.com/):
+   ```bash
+   ngrok http 3000
+   ```
+3. In your [Resend Webhooks Dashboard](https://resend.com/webhooks), add a webhook pointing to:
+   ```
+   https://<your-ngrok-subdomain>.ngrok-free.app/api/webhooks/resend/<YOUR_UNIQUE_WEBHOOK_TOKEN>
+   ```
+   Select event: `email.received`.
 
 ---
 
-## Security Architecture
+### 4. Viewing Conversations & Mailbox
+- Open the mailbox at `http://localhost:3000`.
+- The left column shows your active conversation threads with unread indicators and timestamps.
+- Click any thread to open the conversation timeline.
+- External images and 1x1 tracking pixels are blocked by default with a safety banner. Click **Load Remote Images** whenever you wish to view them.
 
-1. **Zero-Knowledge Key Storage**: API keys are encrypted at rest using AES-256-GCM. Decryption keys are held strictly in memory during dispatch and never stored in cookies or client caches.
-2. **Replay-Attack Protection**: Inbound Svix webhooks reject timestamps with variance `> 300` seconds (5 minutes).
-3. **HTML Sanitization**: All inbound HTML passes through `isomorphic-dompurify` to strip dangerous elements (`<script>`, `onerror`, `onload`, `javascript:` URI schemes).
-4. **Sandboxed Rendering**: Message previews use `<iframe sandbox="allow-popups allow-popups-to-escape-sandbox">`, preventing script execution or cookie theft.
-5. **Strict Tenant Boundaries**: All database queries enforce scoping to the authenticated `userId`.
+---
+
+### 5. Replying to Emails
+1. While viewing any thread in the timeline, click **Reply** or click the inline reply prompt at the bottom of the conversation.
+2. The composer automatically:
+   - Sets **From** to the configured account email.
+   - Pre-fills **To** with the original sender's address.
+   - Sets **Subject** with `Re: <original subject>`.
+   - Attaches RFC 5322 headers (`In-Reply-To` and `References`) pointing to the parent message ID.
+3. Type your response in Rich Text or Plain Text mode and click **Send Message**.
+4. The message is dispatched through Resend's API and appended to your thread timeline as an `OUTBOUND` entry.
+
+---
+
+### 6. Composing Brand New Emails
+- Click the **Compose** button in the sidebar.
+- Choose which connected Resend account/domain to send from.
+- Enter recipients (`To`, `Cc`, `Bcc`), subject, message body, and drag-and-drop attachments.
+- Click **Send Message** to dispatch immediately.
+
+---
+
+## Local Development Scripts
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts local Next.js dev server with hot reload |
+| `npm test` | Runs the Node.js native test runner (40 tests, 11 suites) |
+| `npx prisma db push` | Synchronizes Prisma schema with local `dev.db` |
+| `npx prisma studio` | Opens visual database browser at `http://localhost:5555` |
+| `npm run build` | Builds production standalone bundle for deployment |
+
+---
+
+## Security In Local Environment
+
+- **Zero Plaintext Secrets**: Resend API keys are encrypted with AES-256-GCM before entering SQLite.
+- **Script Neutralization**: All email HTML is sanitized with `isomorphic-dompurify` and displayed inside an isolated iframe sandbox (`sandbox="allow-popups allow-popups-to-escape-sandbox"`), neutralizing `<script>` or malicious DOM injections.
+- **Privacy First**: Remote images are blocked by default so viewing test emails will not leak your local IP address to tracking services.
 
 ---
 
