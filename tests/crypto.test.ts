@@ -38,8 +38,10 @@ describe("lib/crypto.ts AES-256-GCM suite", () => {
   it("should fail gracefully when ciphertext is corrupted or tampered with", () => {
     const encrypted = encryptApiKey(apiKey, testKey);
     const parts = encrypted.split(":");
-    // Tamper with ciphertext by altering last char
-    const tampered = `${parts[0]}:${parts[1]}:${parts[2].slice(0, -1)}f`;
+    // Reliably tamper with ciphertext by altering last char
+    const lastChar = parts[2].slice(-1);
+    const flipped = lastChar === "0" ? "1" : "0";
+    const tampered = `${parts[0]}:${parts[1]}:${parts[2].slice(0, -1)}${flipped}`;
 
     assert.throws(
       () => decryptApiKey(tampered, testKey),

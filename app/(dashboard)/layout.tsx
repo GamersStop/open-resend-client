@@ -11,6 +11,7 @@ import { AccountSwitcher } from "@/components/shared/account-switcher";
 import { ComposerProvider } from "@/components/email/composer-context";
 import { ComposerModal } from "@/components/email/composer-modal";
 import { ComposeButton } from "@/components/shared/compose-button";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import {
   Mail,
   Inbox,
@@ -188,6 +189,8 @@ export default async function DashboardLayout({
 
             {/* Security & Logout Footer */}
             <div className="p-3 border-t border-slate-800 bg-slate-900/50 space-y-2">
+              <LanguageSwitcher placement="up" />
+
               <Link
                 href="/settings"
                 className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-slate-800/60 transition-colors"

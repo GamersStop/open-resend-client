@@ -1,0 +1,87 @@
+{
+  "app": {
+    "title": "OpenResend",
+    "tagline": "Self-Hosted Resend Webmail Client",
+    "version": "v0.1"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "discard": "Discard",
+    "reply": "Reply",
+    "replyAll": "Reply All",
+    "copied": "Copied!",
+    "copy": "Copy",
+    "active": "Active",
+    "safe": "Safe"
+  },
+  "nav": {
+    "mailbox": "Mailbox",
+    "inbox": "Inbox",
+    "starred": "Starred",
+    "sent": "Sent",
+    "archive": "Archive",
+    "trash": "Trash",
+    "accounts": "Accounts",
+    "settings": "Account Settings",
+    "signOut": "Sign Out",
+    "newMessage": "New Message",
+    "unifiedInbox": "Unified Inbox"
+  },
+  "settings": {
+    "title": "Connected Resend Accounts",
+    "subtitle": "Configure isolated Resend API keys, outbound default sender identities, and inbound webhook endpoints.",
+    "addAccount": "Add Account",
+    "editAccount": "Edit Account",
+    "accountLabel": "Account Display Label",
+    "apiKey": "Resend API Key",
+    "senderEmail": "Default Sender Email Address",
+    "senderName": "Default Sender Name",
+    "webhookSecret": "Webhook Signing Secret",
+    "webhookEndpoint": "Inbound Webhook Endpoint",
+    "copyUrl": "Copy URL",
+    "saveAccount": "Save Account",
+    "updateAccount": "Update Account",
+    "setupGuideTitle": "How to connect Resend Inbound Routing"
+  },
+  "composer": {
+    "newMessage": "New Message",
+    "from": "From:",
+    "to": "To:",
+    "cc": "Cc",
+    "bcc": "Bcc",
+    "subject": "Subject:",
+    "subjectPlaceholder": "Subject of the email...",
+    "bodyPlaceholder": "Write your email here...",
+    "richText": "Rich Text",
+    "plainText": "Plain Text",
+    "attachFiles": "Attach Files",
+    "send": "Send Message",
+    "transmitting": "Transmitting...",
+    "discard": "Discard"
+  },
+  "viewer": {
+    "noConversationSelected": "No Conversation Selected",
+    "noConversationSubtitle": "Choose a thread from the list to view its messages, sandboxed previews, and conversation timeline.",
+    "safeShield": "Sandboxed Security Shield Active (Remote images and scripts blocked by default)",
+    "remoteImagesBlocked": "Remote tracking pixels and external images were blocked to protect your IP.",
+    "remoteImagesLoaded": "Remote images loaded upon your request.",
+    "loadRemoteImages": "Load Remote Images",
+    "blockImages": "Block Images",
+    "attachments": "Attachments",
+    "clickToReply": "Click here to reply to this conversation..."
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "loginSubtitle": "Sign in to manage your domains and mailboxes",
+    "email": "Email Address",
+    "password": "Master Password",
+    "signIn": "Sign In",
+    "authenticating": "Authenticating...",
+    "firstTime": "First time setting up OpenResend?",
+    "createAdmin": "Create admin account"
+  }
+}

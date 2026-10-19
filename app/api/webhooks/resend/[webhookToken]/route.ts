@@ -35,6 +35,13 @@ function verifyWebhookSignature({
     headers.get("svix-signature") || headers.get("resend-signature");
 
   if (svixId && svixTimestamp && svixSignature) {
+    // Replay attack protection: verify timestamp tolerance (300 seconds / 5 mins)
+    const now = Math.floor(Date.now() / 1000);
+    const ts = parseInt(svixTimestamp, 10);
+    if (isNaN(ts) || Math.abs(now - ts) > 300) {
+      return false;
+    }
+
     const toSign = `${svixId}.${svixTimestamp}.${rawBody}`;
     const cleanSecret = secret.startsWith("whsec_")
       ? secret.substring(6)
@@ -56,7 +63,20 @@ function verifyWebhookSignature({
       .split(" ")
       .map((item) => item.replace(/^v1,/, ""));
 
-    if (signatures.some((sig) => crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig)))) {
+    if (
+      signatures.some((sig) => {
+        try {
+          const sigBuf = Buffer.from(sig);
+          const expBuf = Buffer.from(expectedSig);
+          return (
+            sigBuf.length === expBuf.length &&
+            crypto.timingSafeEqual(sigBuf, expBuf)
+          );
+        } catch {
+          return false;
+        }
+      })
+    ) {
       return true;
     }
   }
@@ -71,11 +91,11 @@ function verifyWebhookSignature({
       .digest("hex");
 
     try {
+      const sigBuf = Buffer.from(customSignature);
+      const expBuf = Buffer.from(expectedHex);
       if (
-        crypto.timingSafeEqual(
-          Buffer.from(customSignature),
-          Buffer.from(expectedHex)
-        )
+        sigBuf.length === expBuf.length &&
+        crypto.timingSafeEqual(sigBuf, expBuf)
       ) {
         return true;
       }

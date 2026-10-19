@@ -13,6 +13,8 @@ export const metadata: Metadata = {
     "Lightweight, multi-account, self-hosted webmail client built specifically for Resend APIs.",
 };
 
+import { I18nProvider } from "@/components/shared/i18n-context";
+
 export default function RootLayout({
   children,
 }: {
@@ -21,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white">
-        {children}
+        <I18nProvider>{children}</I18nProvider>
       </body>
     </html>
   );

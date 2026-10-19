@@ -1,0 +1,87 @@
+{
+  "app": {
+    "title": "OpenResend",
+    "tagline": "Selbst gehosteter Resend-Webmail-Client",
+    "version": "v0.1"
+  },
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "discard": "Verwerfen",
+    "reply": "Antworten",
+    "replyAll": "Allen antworten",
+    "copied": "Kopiert!",
+    "copy": "Kopieren",
+    "active": "Aktiv",
+    "safe": "Sicher"
+  },
+  "nav": {
+    "mailbox": "Postfach",
+    "inbox": "Posteingang",
+    "starred": "Markiert",
+    "sent": "Gesendet",
+    "archive": "Archiv",
+    "trash": "Papierkorb",
+    "accounts": "Konten",
+    "settings": "Kontoeinstellungen",
+    "signOut": "Abmelden",
+    "newMessage": "Neue Nachricht",
+    "unifiedInbox": "Gemeinsamer Posteingang"
+  },
+  "settings": {
+    "title": "Verbundene Resend-Konten",
+    "subtitle": "Konfigurieren Sie isolierte Resend-API-Schlüssel, Standardabsenderidentitäten und eingehende Webhook-Endpunkte.",
+    "addAccount": "Konto hinzufügen",
+    "editAccount": "Konto bearbeiten",
+    "accountLabel": "Konto-Anzeigename",
+    "apiKey": "Resend-API-Schlüssel",
+    "senderEmail": "Standardabsender-E-Mail-Adresse",
+    "senderName": "Standardabsender-Name",
+    "webhookSecret": "Webhook-Signaturgeheimnis",
+    "webhookEndpoint": "Eingehender Webhook-Endpunkt",
+    "copyUrl": "URL kopieren",
+    "saveAccount": "Konto speichern",
+    "updateAccount": "Konto aktualisieren",
+    "setupGuideTitle": "So verbinden Sie das Resend-Inbound-Routing"
+  },
+  "composer": {
+    "newMessage": "Neue Nachricht",
+    "from": "Von:",
+    "to": "An:",
+    "cc": "Cc",
+    "bcc": "Bcc",
+    "subject": "Betreff:",
+    "subjectPlaceholder": "Betreff der E-Mail...",
+    "bodyPlaceholder": "Verfassen Sie hier Ihre Nachricht...",
+    "richText": "Rich Text",
+    "plainText": "Klartext",
+    "attachFiles": "Dateien anhängen",
+    "send": "Nachricht senden",
+    "transmitting": "Wird übertragen...",
+    "discard": "Verwerfen"
+  },
+  "viewer": {
+    "noConversationSelected": "Keine Konversation ausgewählt",
+    "noConversationSubtitle": "Wählen Sie eine Konversation aus der Liste aus, um Nachrichten, isolierte Vorschauen und den Verlauf anzuzeigen.",
+    "safeShield": "Sicherheits-Sandbox aktiv (Externe Bilder und Skripte standardmäßig blockiert)",
+    "remoteImagesBlocked": "Tracking-Pixel und externe Bilder wurden blockiert, um Ihre IP-Adresse zu schützen.",
+    "remoteImagesLoaded": "Externe Bilder auf Ihre Anfrage geladen.",
+    "loadRemoteImages": "Externe Bilder laden",
+    "blockImages": "Bilder blockieren",
+    "attachments": "Anhänge",
+    "clickToReply": "Hier klicken, um auf diese Konversation zu antworten..."
+  },
+  "auth": {
+    "welcomeBack": "Willkommen zurück",
+    "loginSubtitle": "Melden Sie sich an, um Ihre Domains und Postfächer zu verwalten",
+    "email": "E-Mail-Adresse",
+    "password": "Master-Passwort",
+    "signIn": "Anmelden",
+    "authenticating": "Wird authentifiziert...",
+    "firstTime": "Richten Sie OpenResend zum ersten Mal ein?",
+    "createAdmin": "Administratorkonto erstellen"
+  }
+}

@@ -24,6 +24,7 @@ import {
   AlertCircle,
   HelpCircle,
 } from "lucide-react";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 
 interface AccountManagerProps {
   accounts: SafeAccount[];
@@ -93,16 +94,21 @@ export function AccountManager({ accounts, appUrl }: AccountManagerProps) {
           </p>
         </div>
 
-        <button
-          onClick={() => {
-            setIsAdding(true);
-            setEditingAccount(null);
-          }}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium shadow-md shadow-indigo-600/25 transition-all cursor-pointer self-start sm:self-auto"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Add Account</span>
-        </button>
+        <div className="flex items-center gap-3 self-start sm:self-auto">
+          <div className="w-36 sm:w-44">
+            <LanguageSwitcher placement="down" />
+          </div>
+          <button
+            onClick={() => {
+              setIsAdding(true);
+              setEditingAccount(null);
+            }}
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium shadow-md shadow-indigo-600/25 transition-all cursor-pointer"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Add Account</span>
+          </button>
+        </div>
       </div>
 
       {/* Add Account Modal / Panel */}

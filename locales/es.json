@@ -1,0 +1,87 @@
+{
+  "app": {
+    "title": "OpenResend",
+    "tagline": "Cliente de correo web autohospedado para Resend",
+    "version": "v0.1"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "discard": "Descartar",
+    "reply": "Responder",
+    "replyAll": "Responder a todos",
+    "copied": "¡Copiado!",
+    "copy": "Copiar",
+    "active": "Activo",
+    "safe": "Seguro"
+  },
+  "nav": {
+    "mailbox": "Buzón",
+    "inbox": "Bandeja de entrada",
+    "starred": "Destacados",
+    "sent": "Enviados",
+    "archive": "Archivo",
+    "trash": "Papelera",
+    "accounts": "Cuentas",
+    "settings": "Configuración de cuentas",
+    "signOut": "Cerrar sesión",
+    "newMessage": "Nuevo mensaje",
+    "unifiedInbox": "Buzón unificado"
+  },
+  "settings": {
+    "title": "Cuentas de Resend conectadas",
+    "subtitle": "Configure claves de API aisladas de Resend, identidades de remitente y webhooks entrantes.",
+    "addAccount": "Agregar cuenta",
+    "editAccount": "Editar cuenta",
+    "accountLabel": "Etiqueta de la cuenta",
+    "apiKey": "Clave API de Resend",
+    "senderEmail": "Correo del remitente predeterminado",
+    "senderName": "Nombre del remitente",
+    "webhookSecret": "Secreto de firma del Webhook",
+    "webhookEndpoint": "Punto de enlace del Webhook entrante",
+    "copyUrl": "Copiar URL",
+    "saveAccount": "Guardar cuenta",
+    "updateAccount": "Actualizar cuenta",
+    "setupGuideTitle": "Cómo conectar el enrutamiento entrante de Resend"
+  },
+  "composer": {
+    "newMessage": "Nuevo mensaje",
+    "from": "De:",
+    "to": "Para:",
+    "cc": "Cc",
+    "bcc": "Cco",
+    "subject": "Asunto:",
+    "subjectPlaceholder": "Asunto del correo...",
+    "bodyPlaceholder": "Escribe tu correo aquí...",
+    "richText": "Texto enriquecido",
+    "plainText": "Texto plano",
+    "attachFiles": "Adjuntar archivos",
+    "send": "Enviar mensaje",
+    "transmitting": "Transmitiendo...",
+    "discard": "Descartar"
+  },
+  "viewer": {
+    "noConversationSelected": "Ninguna conversación seleccionada",
+    "noConversationSubtitle": "Elige un hilo de la lista para ver sus mensajes y la línea de tiempo.",
+    "safeShield": "Escudo de seguridad aislado activo (Imágenes y scripts bloqueados por defecto)",
+    "remoteImagesBlocked": "Se bloquearon las imágenes remotas para proteger tu dirección IP.",
+    "remoteImagesLoaded": "Imágenes remotas cargadas a petición.",
+    "loadRemoteImages": "Cargar imágenes remotas",
+    "blockImages": "Bloquear imágenes",
+    "attachments": "Archivos adjuntos",
+    "clickToReply": "Haz clic aquí para responder a esta conversación..."
+  },
+  "auth": {
+    "welcomeBack": "Bienvenido de nuevo",
+    "loginSubtitle": "Inicia sesión para gestionar tus buzones",
+    "email": "Correo electrónico",
+    "password": "Contraseña maestra",
+    "signIn": "Iniciar sesión",
+    "authenticating": "Autenticando...",
+    "firstTime": "¿Primera vez en OpenResend?",
+    "createAdmin": "Crear cuenta de administrador"
+  }
+}

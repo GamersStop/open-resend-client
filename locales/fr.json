@@ -1,0 +1,87 @@
+{
+  "app": {
+    "title": "OpenResend",
+    "tagline": "Client Webmail Resend auto-hébergé",
+    "version": "v0.1"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "discard": "Abandonner",
+    "reply": "Répondre",
+    "replyAll": "Répondre à tous",
+    "copied": "Copié !",
+    "copy": "Copier",
+    "active": "Actif",
+    "safe": "Sécurisé"
+  },
+  "nav": {
+    "mailbox": "Boîte aux lettres",
+    "inbox": "Boîte de réception",
+    "starred": "Favoris",
+    "sent": "Envoyés",
+    "archive": "Archives",
+    "trash": "Corbeille",
+    "accounts": "Comptes",
+    "settings": "Paramètres du compte",
+    "signOut": "Se déconnecter",
+    "newMessage": "Nouveau message",
+    "unifiedInbox": "Boîte unifiée"
+  },
+  "settings": {
+    "title": "Comptes Resend connectés",
+    "subtitle": "Configurez des clés API Resend isolées, vos identités d'expéditeur et vos points de terminaison webhook entrants.",
+    "addAccount": "Ajouter un compte",
+    "editAccount": "Modifier le compte",
+    "accountLabel": "Nom du compte",
+    "apiKey": "Clé API Resend",
+    "senderEmail": "Adresse e-mail d'expéditeur par défaut",
+    "senderName": "Nom de l'expéditeur par défaut",
+    "webhookSecret": "Secret de signature du webhook",
+    "webhookEndpoint": "Point de terminaison du webhook entrant",
+    "copyUrl": "Copier l'URL",
+    "saveAccount": "Enregistrer le compte",
+    "updateAccount": "Mettre à jour le compte",
+    "setupGuideTitle": "Comment connecter le routage entrant Resend"
+  },
+  "composer": {
+    "newMessage": "Nouveau message",
+    "from": "De :",
+    "to": "À :",
+    "cc": "Cc",
+    "bcc": "Cci",
+    "subject": "Objet :",
+    "subjectPlaceholder": "Objet de l'e-mail...",
+    "bodyPlaceholder": "Rédigez votre message ici...",
+    "richText": "Texte enrichi",
+    "plainText": "Texte brut",
+    "attachFiles": "Joindre des fichiers",
+    "send": "Envoyer le message",
+    "transmitting": "Transmission en cours...",
+    "discard": "Abandonner"
+  },
+  "viewer": {
+    "noConversationSelected": "Aucune conversation sélectionnée",
+    "noConversationSubtitle": "Sélectionnez un fil de discussion pour afficher ses messages, aperçus sécurisés et l'historique.",
+    "safeShield": "Bouclier de sécurité sandbox actif (Images distantes et scripts bloqués par défaut)",
+    "remoteImagesBlocked": "Les pixels de suivi et images distantes ont été bloqués pour préserver votre adresse IP.",
+    "remoteImagesLoaded": "Images distantes chargées à votre demande.",
+    "loadRemoteImages": "Charger les images distantes",
+    "blockImages": "Bloquer les images",
+    "attachments": "Pièces jointes",
+    "clickToReply": "Cliquez ici pour répondre à cette conversation..."
+  },
+  "auth": {
+    "welcomeBack": "Bienvenue",
+    "loginSubtitle": "Connectez-vous pour gérer vos domaines et vos boîtes aux lettres",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe principal",
+    "signIn": "Se connecter",
+    "authenticating": "Authentification...",
+    "firstTime": "Première configuration d'OpenResend ?",
+    "createAdmin": "Créer un compte administrateur"
+  }
+}
