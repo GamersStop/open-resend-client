@@ -40,10 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.rules.md
+rules.md
 .env
-.tasks.md
-.architecture.md
-.prd.md
-.agent.md
-.AGENTS.md
+tasks.md
+architecture.md
+prd.md
+agent.md
+AGENTS.md
