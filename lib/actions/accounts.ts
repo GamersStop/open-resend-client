@@ -35,6 +35,7 @@ export interface SafeAccount {
   id: string;
   label: string;
   webhookToken: string;
+  webhookSecret?: string;
   defaultFromEmail: string;
   defaultFromName: string | null;
   createdAt: Date;
@@ -248,6 +249,7 @@ export async function getSafeAccounts(): Promise<SafeAccount[]> {
       id: true,
       label: true,
       webhookToken: true,
+      webhookSecret: true,
       defaultFromEmail: true,
       defaultFromName: true,
       createdAt: true,

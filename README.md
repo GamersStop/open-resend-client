@@ -122,7 +122,7 @@ When running for the first time, navigate to:
    - **Resend API Key**: Your `re_...` key from [Resend API Keys](https://resend.com/api-keys).
    - **Default Sender Email**: An email matching your verified Resend domain (e.g., `inbox@yourdomain.com`).
    - **Default Sender Name**: Your name or team name (e.g., `Alex from Acme`).
-   - **Webhook Secret**: Paste your Resend webhook secret (`whsec_...`) or leave empty for local development.
+   - **Webhook Secret**: Leave blank initially if you haven't created the webhook in Resend yet.
 4. Click **Save Account**. Your API key is encrypted with AES-256-GCM before saving to `dev.db`.
 
 ---
@@ -134,15 +134,17 @@ To receive emails from Resend on your local development machine:
    ```
    http://localhost:3000/api/webhooks/resend/<YOUR_UNIQUE_WEBHOOK_TOKEN>
    ```
-2. For testing live emails received by Resend, expose your local port 3000 using a secure tunnel like [Cloudflare Tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) or [Ngrok](https://ngrok.com/):
+2. Expose your local port 3000 using a secure tunnel like [Ngrok](https://ngrok.com/) or Cloudflare:
    ```bash
-   ngrok http 3000
+   npx ngrok http 3000
    ```
-3. In your [Resend Webhooks Dashboard](https://resend.com/webhooks), add a webhook pointing to:
+3. In your [Resend Webhooks Dashboard](https://resend.com/webhooks), click **Add Webhook** and set the endpoint to:
    ```
-   https://<your-ngrok-subdomain>.ngrok-free.app/api/webhooks/resend/<YOUR_UNIQUE_WEBHOOK_TOKEN>
+   https://<your-tunnel-subdomain>.ngrok-free.app/api/webhooks/resend/<YOUR_UNIQUE_WEBHOOK_TOKEN>
    ```
    Select event: `email.received`.
+4. Copy the **Signing Secret** (`whsec_...`) shown in your Resend Webhook.
+5. In OpenResend, click **Edit** on your account, paste that `whsec_...` into **Webhook Signing Secret**, and click **Update Account**.
 
 ---
 

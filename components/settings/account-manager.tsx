@@ -330,6 +330,21 @@ export function AccountManager({ accounts, appUrl }: AccountManagerProps) {
               </div>
             </div>
 
+            <div>
+              <label className="block text-xs font-medium text-slate-300 mb-1">
+                Webhook Signing Secret
+              </label>
+              <input
+                name="webhookSecret"
+                defaultValue={editingAccount.webhookSecret || ""}
+                placeholder="whsec_... (from Resend Webhooks)"
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-100 placeholder-slate-500 font-mono focus:outline-none focus:ring-1 focus:ring-amber-500"
+              />
+              <p className="text-[11px] text-slate-500 mt-1">
+                Used to verify inbound payload authenticity from Resend (starts with whsec_).
+              </p>
+            </div>
+
             <div className="flex justify-end gap-2 pt-2">
               <button
                 type="button"
