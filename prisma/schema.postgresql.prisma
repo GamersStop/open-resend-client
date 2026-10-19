@@ -1,0 +1,86 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String          @id @default(cuid())
+  email        String          @unique
+  passwordHash String
+  accounts     ResendAccount[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model ResendAccount {
+  id               String       @id @default(cuid())
+  userId           String
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label            String
+  apiKeyEncrypted  String
+  webhookSecret    String
+  webhookToken     String       @unique @default(cuid())
+  defaultFromEmail String
+  defaultFromName  String?
+  threads          Thread[]
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@index([userId])
+}
+
+model Thread {
+  id           String        @id @default(cuid())
+  accountId    String
+  account      ResendAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  subject      String
+  lastActivity DateTime      @default(now())
+  isRead       Boolean       @default(false)
+  isStarred    Boolean       @default(false)
+  isArchived   Boolean       @default(false)
+  isTrash      Boolean       @default(false)
+  messages     Message[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([accountId])
+  @@index([lastActivity])
+}
+
+model Message {
+  id              String       @id @default(cuid())
+  threadId        String
+  thread          Thread       @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  resendMessageId String?      @unique
+  messageIdHeader String?
+  direction       String       @default("INBOUND")
+  from            String
+  to              String
+  cc              String?
+  bcc             String?
+  subject         String
+  htmlBody        String?
+  textBody        String?
+  attachments     Attachment[]
+  createdAt       DateTime     @default(now())
+
+  @@index([threadId])
+  @@index([messageIdHeader])
+}
+
+model Attachment {
+  id          String   @id @default(cuid())
+  messageId   String
+  message     Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  filename    String
+  mimeType    String
+  size        Int
+  storagePath String
+  createdAt   DateTime @default(now())
+
+  @@index([messageId])
+}
