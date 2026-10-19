@@ -94,8 +94,8 @@ export default async function DashboardLayout({
               </div>
               <nav className="space-y-0.5">
                 <Link
-                  href="/"
-                  className="flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 transition-colors"
+                  href="/?folder=inbox"
+                  className="flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
                     <Inbox className="h-4 w-4 text-indigo-400" />
@@ -108,45 +108,45 @@ export default async function DashboardLayout({
                   )}
                 </Link>
 
-                <a
-                  href="#starred"
+                <Link
+                  href="/?folder=starred"
                   className="flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
                     <Star className="h-4 w-4 text-amber-400/80" />
                     <span>Starred</span>
                   </div>
-                </a>
+                </Link>
 
-                <a
-                  href="#sent"
+                <Link
+                  href="/?folder=sent"
                   className="flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
                     <Send className="h-4 w-4 text-slate-400" />
                     <span>Sent</span>
                   </div>
-                </a>
+                </Link>
 
-                <a
-                  href="#archive"
+                <Link
+                  href="/?folder=archive"
                   className="flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
                     <Archive className="h-4 w-4 text-slate-400" />
                     <span>Archive</span>
                   </div>
-                </a>
+                </Link>
 
-                <a
-                  href="#trash"
+                <Link
+                  href="/?folder=trash"
                   className="flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
                     <Trash2 className="h-4 w-4 text-slate-400" />
                     <span>Trash</span>
                   </div>
-                </a>
+                </Link>
               </nav>
             </div>
 
