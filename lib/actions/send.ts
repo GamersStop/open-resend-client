@@ -105,17 +105,56 @@ export async function sendEmailAction(
     };
   }
 
+function ensureBracketedMessageId(id: string): string {
+  const trimmed = id.trim();
+  if (!trimmed) return "";
+  return trimmed.startsWith("<") && trimmed.endsWith(">")
+    ? trimmed
+    : `<${trimmed}>`;
+}
+
+function formatReferencesHeader(refs: string): string {
+  return refs
+    .trim()
+    .split(/\s+/)
+    .map(ensureBracketedMessageId)
+    .filter(Boolean)
+    .join(" ");
+}
+
   // 6. Format sender string: e.g. "Name <email@domain.com>"
   const formattedFrom = fromName ? `${fromName} <${fromEmail}>` : fromEmail;
 
-  // 7. Inject RFC Headers for threading compliance (Rule 1 of rules.md)
+  // 7. Inject RFC Headers for threading compliance (RFC 5322 & Rule 1 of rules.md)
   const customHeaders: Record<string, string> = {};
-  if (inReplyTo) {
-    customHeaders["In-Reply-To"] = inReplyTo;
+  if (inReplyTo && inReplyTo.trim()) {
+    customHeaders["In-Reply-To"] = ensureBracketedMessageId(inReplyTo);
   }
-  if (references) {
-    customHeaders["References"] = references;
+  if (references && references.trim()) {
+    customHeaders["References"] = formatReferencesHeader(references);
   }
+
+  // Ensure multipart content (both HTML and clean Plain Text) to prevent spam flags
+  const plainTextAlternative =
+    textBody && textBody.trim().length > 0
+      ? textBody.trim()
+      : htmlBody
+      ? htmlBody
+          .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+          .replace(/<[^>]+>/g, " ")
+          .replace(/\s+/g, " ")
+          .trim()
+      : undefined;
+
+  const htmlAlternative =
+    htmlBody && htmlBody.trim().length > 0
+      ? htmlBody
+      : textBody
+      ? `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #1e293b;">${textBody.replace(
+          /\n/g,
+          "<br/>"
+        )}</div>`
+      : undefined;
 
   let resendMessageId: string;
 
@@ -133,8 +172,8 @@ export async function sendEmailAction(
         cc: cc.length > 0 ? cc : undefined,
         bcc: bcc.length > 0 ? bcc : undefined,
         subject,
-        html: htmlBody || textBody || "",
-        text: textBody,
+        html: htmlAlternative,
+        text: plainTextAlternative,
         headers: Object.keys(customHeaders).length > 0 ? customHeaders : undefined,
         attachments:
           attachments.length > 0

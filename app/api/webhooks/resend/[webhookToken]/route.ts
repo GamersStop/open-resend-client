@@ -127,6 +127,8 @@ const EmailDataSchema = z.object({
   html: z.string().optional(),
   message_id: z.string().optional(),
   messageId: z.string().optional(),
+  email_id: z.string().optional(),
+  emailId: z.string().optional(),
   in_reply_to: z.string().optional(),
   inReplyTo: z.string().optional(),
   references: z.union([z.string(), z.array(z.string())]).optional(),
@@ -224,9 +226,29 @@ export async function POST(
       const refVal = emailData.headers["references"];
       references = Array.isArray(refVal) ? refVal.map(String) : String(refVal);
     }
-    if (!messageIdHeader && emailData.headers["message-id"]) {
-      messageIdHeader = String(emailData.headers["message-id"]);
+    if (!messageIdHeader) {
+      const hVal =
+        emailData.headers["message-id"] ||
+        emailData.headers["Message-ID"] ||
+        emailData.headers["Message-Id"];
+      if (hVal) {
+        messageIdHeader = String(hVal);
+      }
     }
+  }
+
+  // Fallback to email_id from Resend if message_id was absent
+  if (!messageIdHeader && (emailData.email_id || emailData.emailId)) {
+    messageIdHeader = `<${emailData.email_id || emailData.emailId}@resend.com>`;
+  }
+
+  // Ensure bracketed format for RFC 5322 compliance
+  if (messageIdHeader && typeof messageIdHeader === "string") {
+    const trimmed = messageIdHeader.trim();
+    messageIdHeader =
+      trimmed.startsWith("<") && trimmed.endsWith(">")
+        ? trimmed
+        : `<${trimmed}>`;
   }
 
   // Map attachments

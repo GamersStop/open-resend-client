@@ -147,15 +147,30 @@ export function ThreadView({ thread, onBack }: ThreadViewProps) {
   const { openComposer } = useComposer();
 
   const handleReply = (replyAll: boolean = false) => {
-    const lastMsg = thread.messages[thread.messages.length - 1];
-    const originalSender = lastMsg ? lastMsg.from : thread.account.defaultFromEmail;
-    const match = originalSender.match(/<([^>]+)>/);
-    const targetEmail = match ? match[1] : originalSender.trim();
+    // 1. Prioritize replying to the last INBOUND message from the external sender
+    const lastInboundMsg = [...thread.messages]
+      .reverse()
+      .find((m) => m.direction === "INBOUND");
+    const parentMsg = lastInboundMsg || thread.messages[thread.messages.length - 1];
+
+    // 2. Resolve target recipient address (never reply to ourselves)
+    let targetEmail = "";
+    if (lastInboundMsg) {
+      const match = lastInboundMsg.from.match(/<([^>]+)>/);
+      targetEmail = match ? match[1] : lastInboundMsg.from.trim();
+    } else if (parentMsg) {
+      const parsedTo = parseJsonArray(parentMsg.to);
+      targetEmail = parsedTo[0] || "";
+    }
+
+    if (!targetEmail) {
+      targetEmail = thread.account.defaultFromEmail;
+    }
 
     let ccList: string[] = [];
-    if (replyAll && lastMsg) {
-      const origToList = parseJsonArray(lastMsg.to);
-      const origCcList = parseJsonArray(lastMsg.cc);
+    if (replyAll && parentMsg) {
+      const origToList = parseJsonArray(parentMsg.to);
+      const origCcList = parseJsonArray(parentMsg.cc);
       ccList = [...origToList, ...origCcList].filter(
         (addr) =>
           addr.toLowerCase() !== thread.account.defaultFromEmail.toLowerCase() &&
@@ -163,14 +178,26 @@ export function ThreadView({ thread, onBack }: ThreadViewProps) {
       );
     }
 
+    // 3. Build the RFC 5322 References chain (all previous Message-IDs up to parent)
+    const referencesList = thread.messages
+      .map((m) => m.messageIdHeader?.trim())
+      .filter((id): id is string => Boolean(id));
+    const referencesChain = referencesList.join(" ");
+
+    // 4. Ensure subject has clean 'Re: ' prefix
+    const cleanSubject = thread.subject.trim();
+    const replySubject = /^re:\s+/i.test(cleanSubject)
+      ? cleanSubject
+      : `Re: ${cleanSubject}`;
+
     openComposer({
       threadId: thread.id,
       accountId: thread.account.id,
       to: [targetEmail],
       cc: ccList.length > 0 ? ccList : undefined,
-      subject: thread.subject,
-      inReplyTo: lastMsg?.messageIdHeader || "",
-      references: lastMsg?.messageIdHeader || "",
+      subject: replySubject,
+      inReplyTo: parentMsg?.messageIdHeader || "",
+      references: referencesChain || parentMsg?.messageIdHeader || "",
     });
   };
 
