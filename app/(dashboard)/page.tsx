@@ -3,17 +3,16 @@ export const dynamic = "force-dynamic";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import {
   Search,
   Star,
   Clock,
   ShieldCheck,
   Reply,
-  Forward,
   MoreVertical,
-  Paperclip,
-  CheckCircle2,
   Mail,
+  Filter,
 } from "lucide-react";
 
 export default async function DashboardPage() {
@@ -22,10 +21,16 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+  const cookieStore = await cookies();
+  const activeAccountId = cookieStore.get("openresend_active_account")?.value;
+
+  const isFiltered = activeAccountId && activeAccountId !== "all";
+
   const threads = await db.thread.findMany({
     where: {
       account: {
         userId: session.user.userId,
+        ...(isFiltered ? { id: activeAccountId } : {}),
       },
       isTrash: false,
     },
@@ -49,8 +54,8 @@ export default async function DashboardPage() {
     <div className="flex-1 flex h-full overflow-hidden">
       {/* Thread List Pane */}
       <section className="w-80 md:w-96 border-r border-slate-800 flex flex-col shrink-0 bg-slate-900/30">
-        {/* Search header */}
-        <div className="p-3 border-b border-slate-800">
+        {/* Search header & filter indicator */}
+        <div className="p-3 border-b border-slate-800 space-y-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 pointer-events-none" />
             <input
@@ -59,6 +64,13 @@ export default async function DashboardPage() {
               className="w-full pl-9 pr-3 py-2 bg-slate-800/80 border border-slate-700/80 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
           </div>
+
+          {isFiltered && threads[0] && (
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-indigo-500/10 text-indigo-300 text-[11px] border border-indigo-500/20">
+              <Filter className="h-3 w-3" />
+              <span>Filtered to: {threads[0].account.label}</span>
+            </div>
+          )}
         </div>
 
         {/* List items */}
@@ -66,7 +78,12 @@ export default async function DashboardPage() {
           {threads.length === 0 ? (
             <div className="p-8 text-center text-slate-500 text-xs">
               <Mail className="h-8 w-8 mx-auto mb-2 opacity-40 text-indigo-400" />
-              No conversations found in Inbox.
+              <p>No conversations in this inbox view.</p>
+              {isFiltered && (
+                <p className="text-[10px] text-slate-400 mt-1">
+                  Try switching back to "Unified Inbox" in the header.
+                </p>
+              )}
             </div>
           ) : (
             threads.map((thread) => {
