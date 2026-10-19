@@ -1,6 +1,92 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ==============================================================================
+# OpenResend AppSec Hardened .gitignore
+# Zero-Trust defense against credential leakage, database exposure,
+# internal specifications, attachment dumps, and development artifacts.
+# ==============================================================================
 
-# dependencies
+# ------------------------------------------------------------------------------
+# 1. Internal Specifications, Personas & Roadmap (Confidential / Do Not Commit)
+# ------------------------------------------------------------------------------
+rules.md
+.rules.md
+tasks.md
+.tasks.md
+prd.md
+.prd.md
+agent.md
+.agent.md
+AGENTS.md
+.AGENTS.md
+architecture.md
+.architecture.md
+*.rules.md
+*.tasks.md
+*.prd.md
+*.agent.md
+
+# ------------------------------------------------------------------------------
+# 2. Cryptographic Secrets, Private Keys & Credentials
+# ------------------------------------------------------------------------------
+# Environment variable files
+.env
+.env.*
+*.env
+*.env.local
+*.env.*.local
+.env*.bak
+.env*.old
+!.env.example
+
+# Private keys, certificates and token bundles
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+*.cer
+id_rsa*
+id_ed25519*
+secrets.json
+credentials.json
+service-account*.json
+
+# ------------------------------------------------------------------------------
+# 3. Database Stores & Storage Artifacts
+# ------------------------------------------------------------------------------
+# SQLite databases, journals & WAL files
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+prisma/*.db
+prisma/*.db-journal
+prisma/*.db-wal
+prisma/*.db-shm
+prisma/*.sqlite
+prisma/dev.db*
+dev.db*
+
+# SQL dumps, backups, and memory snapshots
+*.sql
+*.dump
+*.backup
+*.heapsnapshot
+*.cpuprofile
+
+# Ingested email binaries, file uploads, and attachment volumes
+storage/
+attachments/
+uploads/
+/public/attachments/
+/public/uploads/
+
+# ------------------------------------------------------------------------------
+# 4. Dependency Directories & Package Managers
+# ------------------------------------------------------------------------------
 /node_modules
 /.pnp
 .pnp.*
@@ -10,54 +96,47 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
+# ------------------------------------------------------------------------------
+# 5. Build Outputs & Caches
+# ------------------------------------------------------------------------------
 /.next/
 /out/
-
-# production
 /build
+/dist
+*.tsbuildinfo
+next-env.d.ts
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# ------------------------------------------------------------------------------
+# 6. Test Reports, Coverage & Diagnostics Logs
+# ------------------------------------------------------------------------------
+/coverage
+.nyc_output/
+*.log
+logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
-!.env.example
-
-# vercel
+# ------------------------------------------------------------------------------
+# 7. IDE, Operating System & Temporary Files
+# ------------------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.tmp/
+tmp/
+temp/
 .vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# Documentation & task specifications (never commit)
-rules.md
-.rules.md
-tasks.md
-.tasks.md
-architecture.md
-.architecture.md
-prd.md
-.prd.md
-agent.md
-.agent.md
-AGENTS.md
-.AGENTS.md
-
-# Database files
-*.db
-*.db-journal
-*.sqlite
-prisma/*.db
-prisma/*.db-journal
