@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SandboxedViewer } from "./sandboxed-viewer";
+import { useComposer } from "./composer-context";
 import {
   toggleStarAction,
   toggleReadAction,
@@ -143,6 +144,36 @@ export function ThreadView({ thread, onBack }: ThreadViewProps) {
     }
   };
 
+  const { openComposer } = useComposer();
+
+  const handleReply = (replyAll: boolean = false) => {
+    const lastMsg = thread.messages[thread.messages.length - 1];
+    const originalSender = lastMsg ? lastMsg.from : thread.account.defaultFromEmail;
+    const match = originalSender.match(/<([^>]+)>/);
+    const targetEmail = match ? match[1] : originalSender.trim();
+
+    let ccList: string[] = [];
+    if (replyAll && lastMsg) {
+      const origToList = parseJsonArray(lastMsg.to);
+      const origCcList = parseJsonArray(lastMsg.cc);
+      ccList = [...origToList, ...origCcList].filter(
+        (addr) =>
+          addr.toLowerCase() !== thread.account.defaultFromEmail.toLowerCase() &&
+          addr.toLowerCase() !== targetEmail.toLowerCase()
+      );
+    }
+
+    openComposer({
+      threadId: thread.id,
+      accountId: thread.account.id,
+      to: [targetEmail],
+      cc: ccList.length > 0 ? ccList : undefined,
+      subject: thread.subject,
+      inReplyTo: lastMsg?.messageIdHeader || "",
+      references: lastMsg?.messageIdHeader || "",
+    });
+  };
+
   return (
     <div className="flex-1 flex flex-col h-full bg-slate-950 overflow-hidden">
       {/* Thread Action Bar Header */}
@@ -213,6 +244,17 @@ export function ThreadView({ thread, onBack }: ThreadViewProps) {
               </button>
             </>
           )}
+
+          <span className="h-4 w-px bg-slate-800 mx-1" />
+
+          <button
+            onClick={() => handleReply(false)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium shadow-md shadow-indigo-600/20 transition-all cursor-pointer"
+            title="Reply"
+          >
+            <Reply className="h-3.5 w-3.5" />
+            <span>Reply</span>
+          </button>
         </div>
 
         <div className="flex items-center gap-3">
@@ -397,6 +439,24 @@ export function ThreadView({ thread, onBack }: ThreadViewProps) {
                 </div>
               );
             })}
+          </div>
+
+          {/* Quick Reply Bar */}
+          <div
+            onClick={() => handleReply(false)}
+            className="p-4 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900/80 hover:border-indigo-500/40 cursor-pointer transition-all flex items-center justify-between text-xs text-slate-400 group select-none"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="h-7 w-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center group-hover:bg-indigo-500/20">
+                <Reply className="h-4 w-4" />
+              </div>
+              <span className="group-hover:text-slate-200 transition-colors">
+                Click here to reply to this conversation...
+              </span>
+            </div>
+            <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 group-hover:text-indigo-300 group-hover:bg-slate-700 transition-colors">
+              Reply
+            </span>
           </div>
         </div>
       </div>

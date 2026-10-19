@@ -57,15 +57,20 @@ export async function verifySessionToken(token: string): Promise<SessionPayload 
  * Reads and verifies the current session from Next.js request cookies.
  */
 export async function getSession(): Promise<{ user: SessionPayload } | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(COOKIE_NAME)?.value;
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(COOKIE_NAME)?.value;
 
-  if (!token) return null;
+    if (!token) return null;
 
-  const payload = await verifySessionToken(token);
-  if (!payload) return null;
+    const payload = await verifySessionToken(token);
+    if (!payload) return null;
 
-  return { user: payload };
+    return { user: payload };
+  } catch {
+    // Graceful fallback when executed outside Next.js request context (e.g. CLI, tests)
+    return null;
+  }
 }
 
 /**
